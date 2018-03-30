@@ -14,6 +14,12 @@ import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.GridBagConstraints;
+import java.io.FileNotFoundException;
+//import java.io.IOException;
+import java.util.ArrayList;
+//import java.util.Collections;
+//import java.util.Enumeration;
+import java.util.List;
 
 
 public class Main extends JFrame implements ActionListener {
@@ -22,7 +28,9 @@ public class Main extends JFrame implements ActionListener {
 	JFrame frame = new JFrame("Ajouter mot");
 	static Database db = new Database();
 	static String  lstmot = "" ;
-	String  allword = "" ;
+	String  allworddb = "" ;
+	String data = "";
+	List<String> allword = new ArrayList<>();
 	
     public Main() {
     	
@@ -52,9 +60,14 @@ public class Main extends JFrame implements ActionListener {
         tavword.getDocument().putProperty("name", "Text Area");
         tadisplay.setEditable(false);
         brutf.setSelected(true);
-        
+        try {
+			data = new String(LectureFichier.LectureFichier("test.txt"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         db.connect();
-        allword = db.AllMots();
+        allworddb = db.AllMots();
         
         
     }
@@ -82,12 +95,22 @@ public class Main extends JFrame implements ActionListener {
         	if(tfmsg.getText().isEmpty()) {
         		// TODO gere insertion vide
         		System.out.println("Erreur champ vide");
-        	}else {
-        		PhrasesClass ph = new PhrasesClass();
+        	}
+        	else {
+        		//PhrasesClass ph = new PhrasesClass();
         		MotsClass mt = new MotsClass();
+        		MotsClass mtdb = new MotsClass();
         		
         		mt.setMots(tfmsg.getText());
-        		db.insertMots(mt);
+        		String listMots[]  = mt.getMots().split(",");
+        		
+        		
+        		for(int i = 0 ; i < listMots.length ; i++)
+        		{
+        			mtdb.setMots(listMots[i]);
+        			db.insertMots(mtdb);       		   
+        		}
+        		tfmsg.setText("");
         		
         	}
         }
@@ -114,11 +137,28 @@ public class Main extends JFrame implements ActionListener {
         public void updateLog(DocumentEvent e) {
             // TODO call brute force
         	String intf = tfmsg.getText();
+        	tadisplay.setText("");
         	if(intf.isEmpty()) {
         		tadisplay.setText("");
-        	}else {
-        		String listpos = new Bruteforce().brtforce(intf, allword) ;
-            	tadisplay.setText(listpos);
+        	}
+        	else {
+        		if(brutf.isSelected()) {
+        			// TODO implement Bruteforce
+        			String listpos = new Bruteforce().brtforce(intf, data) ;
+                	tadisplay.setText(listpos);
+        		}
+        		else {
+        			// TODO implement ngrams
+        			long start = System.currentTimeMillis();
+        			allword = TrouverMot.RechercherMot(data,intf);
+        			long end = System.currentTimeMillis();
+					for(Object o:allword) {
+						tadisplay.append(o + "\n");
+					}
+					System.out.println("Taille mot : " + intf.length() + " - " + "Taille Dico : " 
+							+ data.length() + " - Temps d'execution = " + (end-start) + " ms");
+        		}
+        		
         	}
         }
     }
@@ -251,8 +291,8 @@ public class Main extends JFrame implements ActionListener {
     
 
     private JTextField tfmsg= new JTextField();
-	private JTextArea tavword= new JTextArea(5,80);
-	private TextArea tadisplay = new TextArea(15,80);
+	private JTextArea tavword= new JTextArea(5,40);
+	private TextArea tadisplay = new TextArea(15,40);
 	private JButton btnclear = new JButton("Clear");
 	private JButton btnsend = new JButton("Send");
 	private JRadioButton brutf = new JRadioButton(" Brute Force");

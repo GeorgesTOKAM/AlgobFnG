@@ -21,7 +21,7 @@ public class Database {
             Class.forName("org.sqlite.JDBC");
             con = DriverManager.getConnection("jdbc:sqlite:" + DBPath);
             stm = con.createStatement();
-            System.out.println("Connexion a " + DBPath + " avec succès");
+            System.out.println("Connexion a " + DBPath + " avec succes");
         } catch (ClassNotFoundException notFoundException) {
             notFoundException.printStackTrace();
             System.out.println("Erreur de connecxion");
@@ -41,9 +41,9 @@ public class Database {
     }
     
     /**
-     * Permet de faire une requête SQL
-     * @param requete La requête SQL (avec un ";" à la fin)
-     * @return Un ResultSet contenant le résultat de la requête
+     * Permet de faire une requete SQL
+     * @param requete La requete SQL (avec un ";" a la fin)
+     * @return Un ResultSet contenant le resultat de la requete
      */
     public ResultSet query(String requet) {
         ResultSet resultat = null;
@@ -58,7 +58,7 @@ public class Database {
     }
     
     public String AllMots() {
-    	stmots ="";
+    	stmots =";";
     	ResultSet r = query("SELECT Mots FROM MOTS");
     	try {
 			ResultSetMetaData rsmd = r.getMetaData();			
@@ -98,7 +98,7 @@ public class Database {
             PreparedStatement p = con.prepareStatement("INSERT INTO MOTS (MOTS) VALUES(?)");
             p.setString(1, mot.getMots());
             p.execute();
-            System.out.println("Le mot est ajouté ");
+            System.out.println("Le mot est ajoute ");
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -110,7 +110,7 @@ public class Database {
             PreparedStatement p = con.prepareStatement("INSERT INTO PHRASES (PHRASES) VALUES(?)");
             p.setString(1, phrase.getPhrases());
             p.execute();
-            System.out.println("La phrase est ajouté ");
+            System.out.println("La phrase est ajoute ");
         }
         catch (SQLException e){
             e.printStackTrace();
