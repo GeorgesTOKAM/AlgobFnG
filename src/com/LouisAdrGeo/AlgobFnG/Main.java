@@ -156,7 +156,8 @@ public class Main extends JFrame implements ActionListener {
 						tadisplay.append(o + "\n");
 					}
 					System.out.println("Taille mot : " + intf.length() + " - " + "Taille Dico : " 
-							+ data.length() + " - Temps d'execution = " + (end-start) + " ms");
+							+ data.length() + " - Temps d'execution = " + (end-start) + " ms"
+							+ " - Taille memoire : " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
         		}
         		
         	}

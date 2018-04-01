@@ -23,8 +23,10 @@ public class Bruteforce {
 		}
 		long end = System.currentTimeMillis();
 		
+		System.out.println();
 		System.out.println("Taille mot : " + m + " - " + "Taille Dico : " 
-		+ n + " - Temps d'execution = " + (end-start) + " ms");
+		+ n + " - Temps d'execution = " + (end-start) + " ms" 
+				+ " - Taille memoire : " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
 		return ltmot;
 	}
 		
